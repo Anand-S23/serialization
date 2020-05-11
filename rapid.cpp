@@ -83,25 +83,32 @@ std::string text_to_json_str(std::string data)
         }
 
         Result += "]},\"settlements\":";
+        std::getline(f, line); // [settlement name]
         while (line != "End")
         {
-            std::getline(f, line); // [settlement name]
             Result += "{\"name\":\"" + line + "\",";
 
             std::getline(f, line); // [sttlement own #]
             Result += "\"own\":" + line + ",\"units\":[";
 
             std::getline(f, line); // [unit name] [class] Team: [team #]
-            while (line != "End_Unit") 
-            {
+            // TODO: Fix infinte while loop
+            //while (line != "End_Unit")
+            //{
                 std::vector<std::string> unitInfo{split(line, ' ')};
-                Result += "{\"name\":\"" + unitInfo[0] + "\",\"HP\":10,";
-                Result += "\"team\":" + unitInfo[3] + ",";
 
-                if (unitInfo[1] == "0") {Result += "\"class\":\"Archer\",";}
-                if (unitInfo[1] == "1") {Result += "\"class\":\"Soldier\",";}
+                if (unitInfo.size() >= 6)
+                {
+                    Result += "{\"name\":\"" + unitInfo.at(0) + "\",\"HP\":10,";
+                    Result += "\"team\":" + unitInfo.at(3);
 
-                std::vector<std::string> movement;
+                    if (unitInfo[1] == "0") {Result += "\"class\":\"Archer\"";}
+                    if (unitInfo[1] == "1") {Result += "\"class\":\"Soldier\"";}
+                }
+
+                // TODO: fix bad alloc
+                /*
+                std::vector<std::string> movement (8);
                 for (int j = 0; j < 4; ++j)
                 {
                     std::getline(f, line);
@@ -116,13 +123,12 @@ std::string text_to_json_str(std::string data)
                 Result += "\"SOUTH_MVMNT\":[" + movement[2] + "," + movement[3] + "],";
                 Result += "\"WEST_MVMNT\":[" + movement[4] + "," + movement[5] + "],"; 
 
+                */
                 std::getline(f, line);
                 std::getline(f, line);
-            }
+                //}
         }
     }
-
-    std::cout << "Test" << std::endl;
 
     std::cout << Result << std::endl;
     return Result; 
@@ -155,7 +161,6 @@ int main()
         std::cout << jsonString << std::endl;
     }
 
-    std::cout << "Test" << std::endl;
 
     return 0;
 }
