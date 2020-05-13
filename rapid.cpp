@@ -100,30 +100,32 @@ std::string text_to_json_str(std::string data)
                 if (unitInfo.size() >= 6)
                 {
                     Result += "{\"name\":\"" + unitInfo.at(0) + "\",\"HP\":10,";
-                    Result += "\"team\":" + unitInfo.at(3);
+                    Result += "\"team\":" + unitInfo.at(3) + ",";
 
-                    if (unitInfo[1] == "0") {Result += "\"class\":\"Archer\"";}
-                    if (unitInfo[1] == "1") {Result += "\"class\":\"Soldier\"";}
+                    if (unitInfo[1] == "0") {Result += "\"class\":\"Archer\",";}
+                    if (unitInfo[1] == "1") {Result += "\"class\":\"Soldier\",";}
                 }
 
                 // TODO: fix bad alloc
                 /*
-                std::vector<std::string> movement (8);
+                std::vector<std::string> movement;
+                std::string movement[8] = {};
                 for (int j = 0; j < 4; ++j)
                 {
                     std::getline(f, line);
                     std::getline(f, line);
-                    movement.push_back(line);
+                    movement[j] = line;
                     std::getline(f, line);
-                    movement.push_back(line);
+                    movement[j+1] = line;
                 }
 
                 Result += "\"NORTH_MVMNT\":[" + movement[6] + "," + movement[7] + "],";
                 Result += "\"EAST_MVMNT\":[" + movement[0] + "," + movement[1] + "],";
                 Result += "\"SOUTH_MVMNT\":[" + movement[2] + "," + movement[3] + "],";
                 Result += "\"WEST_MVMNT\":[" + movement[4] + "," + movement[5] + "],"; 
-
                 */
+
+                Result += "},";
                 std::getline(f, line);
                 std::getline(f, line);
                 //}
@@ -150,6 +152,7 @@ int main()
 
     // NOTE: text_to_jsonstr must work for anything else to work
     std::string jsonString = text_to_json_str(fBuffer);
+    // TODO: move ^ jsonString to a file
 
     rapidjson::Document configData;
     if (configData.ParseInsitu((char *)jsonString.c_str()).HasParseError())
